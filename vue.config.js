@@ -1,6 +1,6 @@
 module.exports = {
     publicPath:'./',
-    outputPath:'site',
+    outputDir:'site',
     pages:{
         admin:{
             // 应用入口配置
