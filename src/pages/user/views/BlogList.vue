@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+  <div>文章列表页</div>
 </template>
 
 <script>
 export default {
-  name: "UserPage"
+  name: "BlogList"
 }
 </script>
 

@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+  <div>文章编辑页</div>
 </template>
 
 <script>
 export default {
-  name: "UserPage"
+  name: "Article-Edit"
 }
 </script>
 

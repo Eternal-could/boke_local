@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+  <div>聊天树洞</div>
 </template>
 
 <script>
 export default {
-  name: "UserPage"
+  name: "ChatHome"
 }
 </script>
 
