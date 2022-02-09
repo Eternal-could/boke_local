@@ -31,7 +31,7 @@
           </div>
           <div class="register-wrapper" v-else>
             <h1 style="text-align: center">注册</h1>
-            <el-form ref="registerForm" :model="registerForm" label-width="100px">
+            <el-form ref="registerForm" :model="registerForm" label-width="100px" :rules="rules">
               <el-form-item label="头像" prop="avatar" style="line-height: 10px">
                 <el-upload
                     class="avatar-uploader"
@@ -84,8 +84,30 @@
 export default {
   name: "LoginPage",
   data() {
+    let vm = this;
+
+    function validatePass(rule, value, cb) {
+      if (value === '') {
+        cb(new Error('请输入密码'));
+      } else {
+        if (vm.registerForm.confirmPassword) {
+          vm.$refs.registerForm.validateField('confirmPassword');
+        }
+        cb();
+      }
+    }
+
+    function validatePass2(rule, value, cb) {
+      if (value === '') {
+        cb(new Error('请再次输入密码'));
+      } else if (value !== vm.registerForm.password) {
+        cb(new Error('两次输入密码不一致!'));
+      } else {
+        cb();
+      }
+    }
     return {
-      isLogin: true,
+      isLogin: false,
       loginForm: {
         userName: '',
         password: ''
@@ -95,6 +117,47 @@ export default {
         password: '',
         confirmPassword:'',
         avatar:''
+      },
+      rules: {
+        userName: [
+          {
+            required: true,
+            message: '请输入用户名',
+            trigger: 'blur',
+          },
+          {
+            min: 6,
+            max: 10,
+            message: '用户名长度介于6～10字符之间',
+            trigger: 'blur',
+          }
+        ],
+        password: [
+          {
+            required: true,
+            validator: validatePass,
+            trigger: 'blur',
+          },
+          {
+            min: 6,
+            max: 16,
+            message: '密码长度介于6～16字符之间',
+            trigger: 'blur',
+          }
+        ],
+        confirmPassword: [
+          {
+            required: true,
+            validator: validatePass2,
+            trigger: 'blur',
+          },
+          {
+            min: 6,
+            max: 16,
+            message: '密码长度介于6～16字符之间',
+            trigger: 'blur',
+          }
+        ]
       }
     }
   },
