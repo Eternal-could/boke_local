@@ -69,6 +69,33 @@ authenticationApp.post('/registerUser',function (req,res){
     })
 })
 
+authenticationApp.post('/loginUser', function (req, res) {
+    UserTables.find({
+        userName: req.body.userName
+    }).then((rs)=>{
+        if (rs.length) {
+            // 如果用户提交的密码 经过 存储过的key和算法加密后，与我们存储的最后密码是一致的 说名用户身份ok
+            if (rs[0].password === enCryptData(req.body.password, rs[0].key, 'sha256')) {
+                res.setHeader('Authorization',rs[0].token);
+                res.send({
+                    status: 200,
+                    message: '登录'
+                })
+            } else {
+                res.send({
+                    status: 500,
+                    message: '用户账号或密码错误'
+                })
+            }
+        } else {
+            res.send({
+                status: 500,
+                message: '用户不存在'
+            })
+        }
+    })
+})
+
 authenticationApp.get('/checkPermission',function (req,res){
     UserTables.find({
         token: req.headers.authorization
@@ -86,6 +113,7 @@ authenticationApp.get('/checkPermission',function (req,res){
         }
     })
 })
+
 module.exports = {
     authenticationApp
 }
