@@ -30,15 +30,15 @@
               <el-dropdown-item>登出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <el-link type="primary" href="login.html">登录</el-link>
-          <el-button type="text" icon="el-icon-s-home">小树洞</el-button>
-          <el-button type="text" icon="el-icon-edit">写文章</el-button>
-          <el-button type="text" icon="el-icon-s-data">站点管理系统</el-button>
+          <el-link type="primary" href="login.html" v-if="!hasPermission">登录</el-link>
+          <el-button type="text" icon="el-icon-s-home" v-if="hasPermission">小树洞</el-button>
+          <el-button type="text" icon="el-icon-edit" v-if="hasPermission">写文章</el-button>
+          <el-button type="text" icon="el-icon-s-data" v-if="hasPermission">站点管理系统</el-button>
         </el-col>
       </el-row>
     </el-header>
     <el-container>
-      <el-aside width="300px">
+      <el-aside width="300px" v-if="hasPermission">
         侧边栏
       </el-aside>
       <el-main>
@@ -54,16 +54,18 @@ export default {
   name: "Home",
   data() {
     return {
-      searchStr:''
+      searchStr:'',
+      hasPermission: false
     }
   },
   created() {
     AuthorService.checkPermission().then(rs=>{
       if (rs.data.status === 200) {
         //stay here
+        this.hasPermission = true
       } else {
         // no
-        window.location.replace('http://localhost:8080/login.html');
+        // window.location.replace('http://localhost:8080/login.html');
       }
     })
   }

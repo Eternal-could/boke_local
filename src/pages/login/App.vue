@@ -173,7 +173,15 @@ export default {
         if (valid) {
           this.$message.success('验证成功')
           if (formName === 'loginForm') {
-            //
+            AuthorService.loginUser(this.loginForm).then((rs)=>{
+              if (rs.data.status === 200) {
+                this.$message.success('登录成功')
+                sessionStorage.setItem('Authorization',rs.headers.authorization)
+                window.location.replace('http://localhost:8080/index.html');
+              } else {
+                this.$message.error('登录失败')
+              }
+            })
           } else {
             //
             AuthorService.registerUser(this.registerForm).then(rs=>{

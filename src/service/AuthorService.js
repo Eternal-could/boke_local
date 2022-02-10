@@ -9,6 +9,10 @@ class AuthorService {
     async checkPermission() {
         return axios.get(`${defaultConfig.baseApiUrl}/authentication/checkPermission`);
     }
+
+    async loginUser(userData) {
+        return axios.post(`${defaultConfig.baseApiUrl}/authentication/loginUser`,userData);
+    }
 }
 
 export default new AuthorService;
