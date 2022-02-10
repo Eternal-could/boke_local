@@ -49,12 +49,23 @@
 </template>
 
 <script>
+import AuthorService from "@/service/AuthorService";
 export default {
   name: "Home",
   data() {
     return {
       searchStr:''
     }
+  },
+  created() {
+    AuthorService.checkPermission().then(rs=>{
+      if (rs.data.status === 200) {
+        //stay here
+      } else {
+        // no
+        window.location.replace('http://localhost:8080/login.html');
+      }
+    })
   }
 }
 </script>

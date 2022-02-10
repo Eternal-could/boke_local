@@ -177,7 +177,14 @@ export default {
           } else {
             //
             AuthorService.registerUser(this.registerForm).then(rs=>{
-              console.log('注册成功',rs);
+              // console.log('注册成功',rs);
+              if (rs.data.status === 200) {
+                this.$message.success('注册成功')
+                sessionStorage.setItem('Authorization',rs.headers.authorization)
+                window.location.replace('http://localhost:8080/index.html');
+              } else {
+                this.$message.error('注册失败')
+              }
             })
           }
         } else {

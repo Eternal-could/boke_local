@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "./config/axios.default.config";
 import defaultConfig from "@/config/config.default";
 
 class ImgFileService {
