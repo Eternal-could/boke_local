@@ -99,11 +99,30 @@ authenticationApp.post('/loginUser', function (req, res) {
 authenticationApp.get('/checkPermission',function (req,res){
     UserTables.find({
         token: req.headers.authorization
-    }).then((rs)=>{
+    }).then(async (rs)=>{
         if (rs.length) {
+            let userDetail = null;
+            await UserDetailTables.find({
+                key: rs[0].key
+            },{
+                key: false,
+                _id: false,
+                __v: false
+            }).then(userDetails => {
+                userDetail = userDetails[0]
+            })
             res.send({
                 status: 200,
-                message: '用户鉴权成功'
+                message: '用户鉴权成功',
+                data: {
+                    userData: {
+                        userName: rs[0].userName,
+                        avatar: rs[0].avatar,
+                        introduction: rs[0].introduction,
+                        isAdmin: rs[0].isAdmin,
+                        userDetail
+                    }
+                }
             })
         } else {
             res.send({
