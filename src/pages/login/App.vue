@@ -82,6 +82,7 @@
 
 <script>
 import defaultConfig from "@/config/config.default";
+import AuthorService from "@/service/AuthorService";
 export default {
   name: "LoginPage",
   data() {
@@ -168,11 +169,21 @@ export default {
       this.isLogin = !this.isLogin
     },
     submitForm(formName) {
-      if (formName === 'loginForm') {
-        //
-      } else {
-        //
-      }
+      this.$refs[formName].validate((valid)=>{
+        if (valid) {
+          this.$message.success('验证成功')
+          if (formName === 'loginForm') {
+            //
+          } else {
+            //
+            AuthorService.registerUser(this.registerForm).then(rs=>{
+              console.log('注册成功',rs);
+            })
+          }
+        } else {
+          this.$message.error('验证失败')
+        }
+      })
     },
     resetForm(formName) {
         this.$refs[formName].resetFields();// 重置表单元素的字段
