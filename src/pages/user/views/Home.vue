@@ -19,27 +19,27 @@
           </el-input>
           <el-dropdown>
             <el-avatar
-                src="https://avatars.githubusercontent.com/u/74654896?s=400&u=e702413f7bda117586b25af383579f33faa7247e&v=4"
-                title="落花成语"
+                :src="userData.avatar"
+                :title="userData.userName"
                 fit="contain"
             >
             </el-avatar>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item disabled>落花成语</el-dropdown-item>
+              <el-dropdown-item disabled>{{userData.userName}}</el-dropdown-item>
               <el-dropdown-item>设置</el-dropdown-item>
               <el-dropdown-item>登出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <el-link type="primary" href="login.html" v-if="!hasPermission">登录</el-link>
           <el-button type="text" icon="el-icon-s-home" v-if="hasPermission">小树洞</el-button>
-          <el-button type="text" icon="el-icon-edit" v-if="hasPermission">写文章</el-button>
-          <el-button type="text" icon="el-icon-s-data" v-if="hasPermission">站点管理系统</el-button>
+          <el-button type="text" icon="el-icon-edit" v-if="hasPermission" @click="goEditArticle">写文章</el-button>
+          <el-button type="text" icon="el-icon-s-data" v-if="isAdmin">站点管理系统</el-button>
         </el-col>
       </el-row>
     </el-header>
     <el-container>
       <el-aside width="300px" v-if="hasPermission">
-        侧边栏
+        <UserInfo :user-data="userData"></UserInfo>
       </el-aside>
       <el-main>
         主内容区
@@ -50,24 +50,40 @@
 
 <script>
 import AuthorService from "@/service/AuthorService";
+import UserInfo from "@/pages/user/components/UserInfo";
 export default {
   name: "Home",
+  components: {
+    UserInfo
+  },
   data() {
     return {
       searchStr:'',
-      hasPermission: false
+      hasPermission: false,
+      isAdmin: false,
+      userData : {
+
+      }
     }
   },
   created() {
     AuthorService.checkPermission().then(rs=>{
       if (rs.data.status === 200) {
         //stay here
-        this.hasPermission = true
+        this.hasPermission = true;
+        this.userData = rs.data.data.userData;
+        sessionStorage.removeItem('userData');
+        sessionStorage.setItem('userData', JSON.stringify(this.userData));
       } else {
         // no
         // window.location.replace('http://localhost:8080/login.html');
       }
     })
+  },
+  methods: {
+    goEditArticle() {
+      this.$router.push('/editArticle')
+    }
   }
 }
 </script>

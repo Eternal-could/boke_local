@@ -171,7 +171,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid)=>{
         if (valid) {
-          this.$message.success('验证成功')
+          // this.$message.success('验证成功')
           if (formName === 'loginForm') {
             AuthorService.loginUser(this.loginForm).then((rs)=>{
               if (rs.data.status === 200) {
