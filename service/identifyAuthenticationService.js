@@ -69,6 +69,23 @@ authenticationApp.post('/registerUser',function (req,res){
     })
 })
 
+authenticationApp.get('/checkPermission',function (req,res){
+    UserTables.find({
+        token: req.headers.authorization
+    }).then((rs)=>{
+        if (rs.length) {
+            res.send({
+                status: 200,
+                message: '用户鉴权成功'
+            })
+        } else {
+            res.send({
+                status: 500,
+                message: '用户鉴权失败'
+            })
+        }
+    })
+})
 module.exports = {
     authenticationApp
 }
