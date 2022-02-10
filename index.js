@@ -4,10 +4,6 @@ let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let apiAddr = require('./config/PublicPath');
 
-// 挂载其他应用
-let { uploadImgFileApp } = require('./service/img.file.upload.service')
-let { getImgFileApp } = require('./service/img.file.get.service')
-
 // 连接数据库
 mongoose.connect('mongodb://localhost:27017/blogDB',{
     useNewUrlParser: true,
@@ -34,9 +30,15 @@ app.all('*', function (req,res,next){
     next();
 })
 
+// 挂载其他应用
+let { uploadImgFileApp } = require('./service/img.file.upload.service')
+let { getImgFileApp } = require('./service/img.file.get.service')
+let { authenticationApp } = require('./service/identifyAuthenticationService')
+
 // 启用各种服务
 app.use(apiAddr.uploadImgApiAddr, uploadImgFileApp);
 app.use(apiAddr.getImgApiAddr, getImgFileApp);
+app.use(apiAddr.authenticationApiAddr,authenticationApp);
 
 //启动服务
 app.listen(8888);
