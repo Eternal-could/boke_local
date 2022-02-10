@@ -35,7 +35,7 @@
               <el-form-item label="头像" prop="avatar" style="line-height: 10px">
                 <el-upload
                     class="avatar-uploader"
-                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :action="`${defaultConfig.baseApiUrl}/uploadImg`"
                     name="blogIllustrations"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess"
@@ -81,6 +81,7 @@
 </template>
 
 <script>
+import defaultConfig from "@/config/config.default";
 export default {
   name: "LoginPage",
   data() {
@@ -107,6 +108,7 @@ export default {
       }
     }
     return {
+      defaultConfig,
       isLogin: false,
       loginForm: {
         userName: '',
@@ -177,8 +179,8 @@ export default {
         this.registerForm.password = '';
     },
     handleAvatarSuccess(rs) {
-      console.log('头像上传成功',rs);
-      this.registerForm.avatar = rs.data[0];
+      console.log('头像上传成功',rs.data.imgList[0]);
+      this.registerForm.avatar = rs.data.imgList[0];
     }
   },
 }
@@ -195,15 +197,19 @@ export default {
     color: beige;
   }
 
-  a{
-    text-decoration: none;
-    color: white;
-  }
-
   .copy {
     text-align: center;
     margin-top: 30px;
     color: white;
+  }
+
+  .copy a{
+    text-decoration: none;
+    color: white;
+  }
+
+  .copy a:hover {
+    color: #7710ce;
   }
 
   .login-wrapper, .register-wrapper {
