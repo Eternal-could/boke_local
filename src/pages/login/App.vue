@@ -129,9 +129,9 @@ export default {
             trigger: 'blur',
           },
           {
-            min: 6,
+            min: 5,
             max: 10,
-            message: '用户名长度介于6～10字符之间',
+            message: '用户名长度介于5～10字符之间',
             trigger: 'blur',
           }
         ],
