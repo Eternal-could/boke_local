@@ -18,7 +18,7 @@ blogApp.post('/create', async function (req,res){
         lastModified: new Date(),
         views: 0,
         likes: 0,
-        blogId: 0, // 博客id 一个递增字段，用于表示一个独一无二的博客文章数据
+        blogId: 1, // 博客id 一个递增字段，用于表示一个独一无二的博客文章数据
         approved: true
     };
     // 在这里写同步
@@ -43,7 +43,7 @@ blogApp.post('/create', async function (req,res){
         token: req.headers.authorization
     }).then(rs=>{
         newBlogData.author = {
-            name: rs[0].userName,
+            userName: rs[0].userName,
             avatar: rs[0].avatar
         }
         // 向用户详情数据里面的文章列表中间 增加该博客id
@@ -70,6 +70,70 @@ blogApp.post('/create', async function (req,res){
     })
 })
 
+// 所有人经过审核过的
+blogApp.get('/getPublicBlog',async function (req, res) {
+    let params = {};
+    let {
+        offset,
+        limit,
+        searchKey
+    } = req.query;
+    // 当用户传过来搜索字段时
+    if (searchKey) {
+        params.title = searchKey;
+    }
+    // 获取用户黑名单
+    let blackList = [];
+    if (req.headers.authorization) {
+        // 只有登录的用户才有黑名单
+        await UserTables.find({
+            token: req.headers.authorization
+        }).then(async (userInfos)=>{
+            // 找到用户的key，而这个key又得去UserDetail里找 所以异步函数
+            await UserDetailTables.find({
+                key: userInfos[0].key
+            }).then(userDetails=>{
+                blackList = userDetails[0].blacklist;
+            })
+        })
+    }
+
+    if (blackList.length) {
+        // 当用户有拉黑的黑名单的时候
+        params['author.name'] = {
+            $nin: blackList
+        }
+    }
+    let totalNum = 0; // 查询的博客总数
+
+    await BlogTables.find({
+        ...params
+    }).then(rs => {
+        totalNum = rs.length; // 获取博客总数
+    })
+    BlogTables.find({
+        ...params
+    },{
+        content: false,
+        _id: false,
+        __v: false
+    },{
+        skip: Number(offset),
+        limit: Number(limit),
+        sort: {
+            lastModified:-1
+        }
+    }).then(blogList=>{
+        res.send({
+            status: 200,
+            message: "查询成功",
+            data: {
+                blogList,
+                totalNum
+            },
+        })
+    })
+})
 module.exports = {
     blogApp
 }
