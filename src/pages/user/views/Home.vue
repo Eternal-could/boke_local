@@ -72,6 +72,7 @@ export default {
         //stay here
         this.hasPermission = true;
         this.userData = rs.data.data.userData;
+        this.isAdmin = this.userData.isAdmin;
         sessionStorage.removeItem('userData');
         sessionStorage.setItem('userData', JSON.stringify(this.userData));
       } else {

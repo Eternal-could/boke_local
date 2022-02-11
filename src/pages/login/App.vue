@@ -110,7 +110,7 @@ export default {
     }
     return {
       defaultConfig,
-      isLogin: false,
+      isLogin: true,
       loginForm: {
         userName: '',
         password: ''
