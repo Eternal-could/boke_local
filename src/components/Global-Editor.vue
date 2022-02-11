@@ -12,6 +12,7 @@
             name="blogIllustrations"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
         >
           <img v-if="cover" :src="cover" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon">封面</i>
@@ -189,6 +190,14 @@ export default {
         this.$message.warning('博客数据不全，请完善后再发布');
         this.isPublishing = false;
       }
+    },
+    beforeAvatarUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+      }
+      return isLt2M;
     }
   },
   beforeDestroy() {

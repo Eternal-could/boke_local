@@ -34,7 +34,7 @@
         <el-col :span="6">
           <p>{{articleData.author.userName}}</p>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="12" style="display: flex; justify-content: space-around">
           <el-badge :value="articleData.likes" class="item">
             <el-button size="small">喜欢</el-button>
           </el-badge>

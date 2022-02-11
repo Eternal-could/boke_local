@@ -44,7 +44,7 @@
       <el-main>
         <el-tabs v-model="activeName" @tab-click="switchTab">
           <el-tab-pane label="广场" name="article">
-
+            <Community></Community>
           </el-tab-pane>
           <el-tab-pane label="喜欢" name="like"></el-tab-pane>
           <el-tab-pane label="评论" name="comment"></el-tab-pane>
@@ -59,10 +59,12 @@
 <script>
 import AuthorService from "@/service/AuthorService";
 import UserInfo from "@/pages/user/components/UserInfo";
+import Community from "@/pages/user/components/Community";
 export default {
   name: "Home",
   components: {
-    UserInfo
+    UserInfo,
+    Community
   },
   data() {
     return {
