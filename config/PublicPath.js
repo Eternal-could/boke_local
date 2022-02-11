@@ -3,6 +3,7 @@ const apiAddr = {
     uploadImgApiAddr: '/api/v1/uploadImg',
     getImgApiAddr: '/api/v1/img',
     authenticationApiAddr: '/api/v1/authentication',
+    blogApiAddr: '/api/v1/blog'
 }
 
 module.exports = apiAddr;

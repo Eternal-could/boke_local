@@ -99,7 +99,7 @@ authenticationApp.post('/loginUser', function (req, res) {
 authenticationApp.get('/checkPermission',function (req,res){
     UserTables.find({
         token: req.headers.authorization
-    }).then(async (rs)=>{
+    }).then(async rs=>{
         if (rs.length) {
             let userDetail = null;
             await UserDetailTables.find({
