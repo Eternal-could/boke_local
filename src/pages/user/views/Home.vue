@@ -42,7 +42,13 @@
         <UserInfo :user-data="userData"></UserInfo>
       </el-aside>
       <el-main>
-        主内容区
+        <el-tabs v-model="activeName" @tab-click="switchTab">
+          <el-tab-pane label="广场" name="article"></el-tab-pane>
+          <el-tab-pane label="喜欢" name="like"></el-tab-pane>
+          <el-tab-pane label="评论" name="comment"></el-tab-pane>
+          <el-tab-pane label="关注" name="attention"></el-tab-pane>
+          <el-tab-pane label="黑名单" name="blacklist"></el-tab-pane>
+        </el-tabs>
       </el-main>
     </el-container>
   </el-container>
@@ -61,9 +67,8 @@ export default {
       searchStr:'',
       hasPermission: false,
       isAdmin: false,
-      userData : {
-
-      }
+      userData : {},
+      activeName: ''
     }
   },
   created() {
@@ -80,10 +85,14 @@ export default {
         // window.location.replace('http://localhost:8080/login.html');
       }
     })
+    this.activeName = this.$route.params.module? this.$route.params.module:'article'
   },
   methods: {
     goEditArticle() {
       this.$router.push('/editArticle')
+    },
+    switchTab(tab) {
+      this.$router.push(`/home/${tab.name}`)
     }
   }
 }

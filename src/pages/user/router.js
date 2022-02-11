@@ -6,10 +6,10 @@ Vue.use(VueRouter);
 let projectRouterConfig = [
     {
         path: '/',
-        redirect: '/home'
+        redirect: '/home/article'
     },
     {
-        path: '/home',
+        path: '/home/:module',
         name: 'home',
         component: () => import('./views/Home')
     },
