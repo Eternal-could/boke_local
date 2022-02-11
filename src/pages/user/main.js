@@ -2,6 +2,7 @@ import Vue from "vue";
 import App from "./App";
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
+import 'highlight.js/styles/atom-one-dark.css';
 import router from "@/pages/user/router";
 
 Vue.use(ElementUI);
