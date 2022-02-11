@@ -43,7 +43,9 @@
       </el-aside>
       <el-main>
         <el-tabs v-model="activeName" @tab-click="switchTab">
-          <el-tab-pane label="广场" name="article"></el-tab-pane>
+          <el-tab-pane label="广场" name="article">
+
+          </el-tab-pane>
           <el-tab-pane label="喜欢" name="like"></el-tab-pane>
           <el-tab-pane label="评论" name="comment"></el-tab-pane>
           <el-tab-pane label="关注" name="attention"></el-tab-pane>
