@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card">
+  <el-card class="box-card" v-loading="isPublishing">
     <div slot="header" class="clearfix">
       <span>写文章</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="publishBlog">发布</el-button>
@@ -66,6 +66,7 @@ import defaultConfig from "@/config/config.default";
 import Editor from "wangeditor";
 import hljs from "highlight.js"
 import ImgFileService from "@/service/imgFileService";
+import BlogService from "@/service/BlogService";
 export default {
   name: "Global-Editor",
   data() {
@@ -77,7 +78,8 @@ export default {
       cover: '',
       inputVisible: false,
       inputValue: '',
-      editor: null
+      editor: null,
+      isPublishing: false
     }
   },
   mounted() {
@@ -161,7 +163,32 @@ export default {
       this.inputVisible = true;
     },
     publishBlog() {
-      console.log(this.editor.txt.html())
+      let blogData = {
+        title: this.title,
+        description: this.description,
+        tags: this.tags,
+        cover: this.cover,
+        content: this.editor.txt.html()
+      }
+      // loading ...
+      this.isPublishing = true;
+      // 数据校验 不通过不发布
+      if (this.title && this.description && this.tags.length && this.cover && blogData.content) {
+        BlogService.createBlog(blogData).then(rs=>{
+          if (rs.data.status === 200) {
+            this.$message.success('发布成功');
+            this.$emit('publishSuccess');
+          } else {
+            this.$message.error('发布失败');
+          }
+        }).finally(()=>{
+          // loading ...
+          this.isPublishing = false;
+        })
+      } else {
+        this.$message.warning('博客数据不全，请完善后再发布');
+        this.isPublishing = false;
+      }
     }
   },
   beforeDestroy() {

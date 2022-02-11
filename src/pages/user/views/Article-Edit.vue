@@ -3,7 +3,7 @@
     <el-page-header
       @back="goBack"
     ></el-page-header>
-    <GlobalEditor></GlobalEditor>
+    <GlobalEditor @publishSuccess="goBack"></GlobalEditor>
   </div>
 </template>
 
