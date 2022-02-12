@@ -25,8 +25,20 @@
                        circle
                        @click="switchLike"
             ></el-button>
-            <el-button type="primary" icon="el-icon-plus">关注</el-button>
-            <el-button type="danger" icon="el-icon-scissors">拉黑</el-button>
+            <el-button type="primary"
+                       :icon="userData.userDetail.attentions.includes(blogData.author.userName) ?'el-icon-check':'el-icon-plus'"
+                       @click="switchAttentions"
+                       v-if="!(blogData.author.userName === userData.userName)"
+            >
+              {{userData.userDetail.attentions.includes(blogData.author.userName) ?'已关注':'关注'}}
+            </el-button>
+            <el-button type="danger"
+                       icon="el-icon-scissors"
+                       @click="switchBlackList"
+                       v-if="!(blogData.author.userName === userData.userName)"
+            >
+              {{userData.userDetail.blacklist.includes(blogData.author.userName) ?'已拉黑':'拉黑'}}
+            </el-button>
             <el-button type="danger" icon="el-icon-thumb">举报</el-button>
           </el-col>
         </el-row>
@@ -80,6 +92,80 @@ export default {
   methods: {
     goBack() {
       this.$router.go(-1);
+    },
+    switchAttentions() {
+      if (this.userData.userDetail.attentions.includes(this.blogData.author.userName)) {
+        // 取消点赞的逻辑
+        // 修改本地sessionStorage数据
+        let tempData = JSON.parse(sessionStorage.getItem('userData'));
+        tempData.userDetail.attentions.splice(tempData.userDetail.attentions.indexOf(this.blogData.author.userName), 1); // 从本地数据干掉用户名字
+        sessionStorage.setItem('userData',JSON.stringify(tempData));
+        // 修改组件内数据
+        this.userData.userDetail.attentions.splice(this.userData.userDetail.attentions.indexOf(this.blogData.author.userName), 1);
+        UserDetailService.unAttentions({
+          userName: this.blogData.author.userName
+        }).then(rs=>{
+          if (rs.data.status === 200) {
+            this.$message.success("取消关注成功")
+          } else {
+            this.$message.error("取消关注失败")
+          }
+        })
+      } else {
+        let tempData = JSON.parse(sessionStorage.getItem('userData'));
+        tempData.userDetail.attentions.push(this.blogData.author.userName);
+        sessionStorage.setItem('userData',JSON.stringify(tempData));
+        // 修改组件内数据
+        this.userData.userDetail.attentions.push(this.blogData.author.userName);  // 增加
+
+        // 点赞
+        UserDetailService.setAttentions({
+          userName: this.blogData.author.userName
+        }).then(rs=>{
+          if (rs.data.status === 200) {
+            this.$message.success("关注成功")
+          } else {
+            this.$message.error("关注失败")
+          }
+        })
+      }
+    },
+    switchBlackList() {
+      if (this.userData.userDetail.blacklist.includes(this.blogData.author.userName)) {
+        // 取消点赞的逻辑
+        // 修改本地sessionStorage数据
+        let tempData = JSON.parse(sessionStorage.getItem('userData'));
+        tempData.userDetail.blacklist.splice(tempData.userDetail.blacklist.indexOf(this.blogData.author.userName), 1); // 从本地数据干掉用户名字
+        sessionStorage.setItem('userData',JSON.stringify(tempData));
+        // 修改组件内数据
+        this.userData.userDetail.blacklist.splice(this.userData.userDetail.blacklist.indexOf(this.blogData.author.userName), 1);
+        UserDetailService.unBlackList({
+          userName: this.blogData.author.userName
+        }).then(rs=>{
+          if (rs.data.status === 200) {
+            this.$message.success("取消拉黑成功")
+          } else {
+            this.$message.error("取消拉黑失败")
+          }
+        })
+      } else {
+        let tempData = JSON.parse(sessionStorage.getItem('userData'));
+        tempData.userDetail.blacklist.push(this.blogData.author.userName);
+        sessionStorage.setItem('userData', JSON.stringify(tempData));
+        // 修改组件内数据
+        this.userData.userDetail.blacklist.push(this.blogData.author.userName);  // 增加
+
+        // 点赞
+        UserDetailService.setBlackList({
+          userName: this.blogData.author.userName
+        }).then(rs => {
+          if (rs.data.status === 200) {
+            this.$message.success("拉黑成功")
+          } else {
+            this.$message.error("拉黑失败")
+          }
+        })
+      }
     },
     switchLike() {
       if (this.userData.userDetail.likes.includes(this.blogId)) {
