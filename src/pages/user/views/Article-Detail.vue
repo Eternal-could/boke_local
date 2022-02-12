@@ -1,10 +1,159 @@
 <template>
-  <div>文章详情页</div>
+  <div>
+    <el-page-header
+        @back="goBack"
+        :content="blogData.title"
+    ></el-page-header>
+    <el-card class="box-card" style="margin-top: 8px">
+      <div slot="header" class="clearfix">
+        <el-row :gutter="10">
+          <el-col :span="2">
+            <el-avatar
+              :src="blogData.author.avatar"
+              size="large"
+            >
+            </el-avatar>
+          </el-col>
+          <el-col :span="6">
+            <span>{{blogData.author.userName}}</span>
+            <br>
+            <span style="display: inline-block;margin-top: 6px">{{blogData.lastModified | transformTime}}</span>
+          </el-col>
+          <el-col :span="8" :offset="8">
+            <el-button type="warning"
+                       :icon="userData.userDetail.likes.includes(blogId) ? 'el-icon-star-on' : 'el-icon-star-off'"
+                       circle
+                       @click="switchLike"
+            ></el-button>
+            <el-button type="primary" icon="el-icon-plus">关注</el-button>
+            <el-button type="danger" icon="el-icon-scissors">拉黑</el-button>
+            <el-button type="danger" icon="el-icon-thumb">举报</el-button>
+          </el-col>
+        </el-row>
+      </div>
+      <div>
+        <div v-html="blogData.content"></div>
+        <div style="margin-top: 8px">
+          <el-tag type="success"
+                  v-for="(tag,index) of blogData.tags"
+                  :key="index"
+                  style="margin-right: 8px"
+          >{{tag}}</el-tag>
+        </div>
+        <div style="margin-top: 8px">
+          <el-row :gutter="10">
+            <el-col :span="1"><i class="el-icon-star-on"></i>{{blogData.likes}}</el-col>
+            <el-col :span="1"><i class="el-icon-view"></i>{{blogData.views}}</el-col>
+            <el-col :span="1"><i class="el-icon-s-comment"></i>{{blogData.comment.length}}</el-col>
+          </el-row>
+        </div>
+      </div>
+    </el-card>
+  </div>
 </template>
 
 <script>
+import BlogService from "@/service/BlogService";
+import UserDetailService from "@/service/UserDetailService";
 export default {
-  name: "Article-Detail"
+  name: "Article-Detail",
+  data(){
+    return {
+      blogId: '',
+      blogData: {
+        title:'',
+        author:{
+          userName: '',
+          avatar: ''
+        },
+        description: '',
+        comment:[],
+        cover:'',
+        views:0,
+        likes:0,
+        lastModified:'',
+        tags:[]
+      },
+      userData: JSON.parse(sessionStorage.getItem('userData'))
+    }
+  },
+  methods: {
+    goBack() {
+      this.$router.go(-1);
+    },
+    switchLike() {
+      if (this.userData.userDetail.likes.includes(this.blogId)) {
+        // 取消点赞的逻辑
+        // 修改本地sessionStorage数据
+        let tempData = JSON.parse(sessionStorage.getItem('userData'));
+        tempData.userDetail.likes.splice(tempData.userDetail.likes.indexOf(this.blogId), 1); // 从本地数据干掉，喜欢的 点赞的博客id干掉
+        sessionStorage.setItem('userData',JSON.stringify(tempData));
+        // 修改组件内数据
+        this.userData.userDetail.likes.splice(this.userData.userDetail.likes.indexOf(this.blogId), 1);
+        UserDetailService.unLikes({
+          blogId: this.blogId
+        }).then(rs=>{
+          if (rs.data.status === 200) {
+            this.$message.success("取消点赞成功")
+          } else {
+            this.$message.error("取消点赞失败")
+          }
+        })
+      } else {
+        let tempData = JSON.parse(sessionStorage.getItem('userData'));
+        tempData.userDetail.likes.push(this.blogId); // 从本地数据增加喜欢的 点赞的博客id
+        sessionStorage.setItem('userData',JSON.stringify(tempData));
+        // 修改组件内数据
+        this.userData.userDetail.likes.push(this.blogId);  // 增加
+
+        // 点赞
+        UserDetailService.setLikes({
+          blogId: this.blogId
+        }).then(rs=>{
+          if (rs.data.status === 200) {
+            this.$message.success("点赞成功")
+          } else {
+            this.$message.error("点赞失败")
+          }
+        })
+      }
+    }
+  },
+  filters: {
+    transformTime(time) {
+      let blogCreateTime = new Date(time); // 获取博客发布的时间
+      let currentTime = new Date(); // 当前时间
+      let offsetTime = currentTime - blogCreateTime; // 时间差 单位是毫秒
+      let offsetST = offsetTime / 1000; // 转成s
+      let offsetMT = offsetST / 60; // min
+      let offsetHT = offsetMT / 60; //h
+      let offsetDT = offsetHT / 24; //day
+      if (offsetDT >= 365) {
+        return `发表于${Math.floor(offsetDT / 365)}年之前`;
+      } else if (offsetDT >= 30 && offsetDT < 365) {
+        return `发表于${Math.floor(offsetDT / 30)}月之前`;
+      } else if (offsetDT >= 7 && offsetDT < 30) {
+        return `发表于${Math.floor(offsetDT / 7)}周之前`;
+      } else if (offsetDT >= 1 && offsetDT < 7) {
+        return `发表于${Math.floor(offsetDT)}天之前`;
+      } else if (offsetHT >= 1) {
+        return `发表于${Math.floor(offsetHT)}小时之前`;
+      } else if (offsetMT >= 1) {
+        return `发表于${Math.floor(offsetMT)}分钟之前`;
+      } else if (offsetST >= 1) {
+        return `发表于${Math.floor(offsetST)}秒之前`;
+      }
+    }
+  },
+  created() {
+    this.blogId = Number(this.$route.params.id);
+    BlogService.getBlogById({
+      blogId: this.blogId
+    }).then(rs=>{
+      console.log('博客的详细数据',rs.data)
+      this.blogData = rs.data.data.blogData;
+    })
+  }
 }
 </script>
 

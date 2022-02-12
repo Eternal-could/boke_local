@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card" v-loading="isPublishing">
+  <el-card class="box-card" v-loading="isPublishing" style="margin-top: 8px">
     <div slot="header" class="clearfix">
       <span>写文章</span>
       <el-button style="float: right; padding: 3px 0" type="text" @click="publishBlog">发布</el-button>

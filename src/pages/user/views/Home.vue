@@ -17,7 +17,7 @@
           >
             <el-button type="primary" slot="append" icon="el-icon-search"></el-button>
           </el-input>
-          <el-dropdown>
+          <el-dropdown v-if="hasPermission">
             <el-avatar
                 :src="userData.avatar"
                 :title="userData.userName"

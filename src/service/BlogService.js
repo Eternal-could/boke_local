@@ -5,8 +5,15 @@ class BlogService {
     async createBlog(blogData) {
         return axios.post(`${defaultConfig.baseApiUrl}/blog/create`,blogData);
     }
+
     async getPublicBlog(args) {
         return axios.get(`${defaultConfig.baseApiUrl}/blog/getPublicBlog`,{
+            params: args
+        });
+    }
+
+    async getBlogById(args) {
+        return axios.get(`${defaultConfig.baseApiUrl}/blog/getBlogDetailById`,{
             params: args
         });
     }
