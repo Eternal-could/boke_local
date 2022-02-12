@@ -71,16 +71,96 @@ userDetailApp.delete('/likes/:id',function (req,res) {
     })
 })
 userDetailApp.post('/attention',function (req,res) {
-
+    UserTables.find({
+        token: req.headers.authorization
+    }).then(async rs=>{
+        UserDetailTables.updateOne({
+            key: rs[0].key
+        },{
+            $push: {
+                attentions: req.body.userName
+            }
+        }).then(()=>{
+            res.send({
+                status: 200,
+                message: '关注成功'
+            })
+        }).catch(err=>{
+            res.send({
+                status: 500,
+                message: '关注失败'
+            })
+        })
+    })
 })
 userDetailApp.delete('/attention/:userName',function (req,res) {
-
+    UserTables.find({
+        token: req.headers.authorization
+    }).then(async rs=>{
+        UserDetailTables.updateOne({
+            key: rs[0].key
+        },{
+            $pull: {
+                attentions: req.params.userName
+            }
+        }).then(()=>{
+            res.send({
+                status: 200,
+                message: '取消关注成功'
+            })
+        }).catch(err=>{
+            res.send({
+                status: 500,
+                message: '取消关注失败'
+            })
+        })
+    })
 })
 userDetailApp.post('/blacklist',function (req,res) {
-
+    UserTables.find({
+        token: req.headers.authorization
+    }).then(async rs=>{
+        UserDetailTables.updateOne({
+            key: rs[0].key
+        },{
+            $push: {
+                blacklist: req.body.userName
+            }
+        }).then(()=>{
+            res.send({
+                status: 200,
+                message: '关注成功'
+            })
+        }).catch(err=>{
+            res.send({
+                status: 500,
+                message: '关注失败'
+            })
+        })
+    })
 })
 userDetailApp.delete('/blacklist/:userName',function (req,res) {
-
+    UserTables.find({
+        token: req.headers.authorization
+    }).then(async rs=>{
+        UserDetailTables.updateOne({
+            key: rs[0].key
+        },{
+            $pull: {
+                blacklist: req.params.userName
+            }
+        }).then(()=>{
+            res.send({
+                status: 200,
+                message: '取消关注成功'
+            })
+        }).catch(err=>{
+            res.send({
+                status: 500,
+                message: '取消关注失败'
+            })
+        })
+    })
 })
 
 module.exports = {
