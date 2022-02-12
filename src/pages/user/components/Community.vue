@@ -12,6 +12,10 @@
       :total="totalNum"
       @current-change="changePage"
     ></el-pagination>
+    <div class="copy">
+      <a href="https://beian.miit.gov.cn/#/Integrated/index" target="blank">黑ICP备19006802号</a>
+      <div>Copyright &copy; 2022 All Rights Reserved. Copyright By LeiYongJiu</div>
+    </div>
   </div>
 </template>
 
@@ -53,5 +57,14 @@ export default {
 </script>
 
 <style scoped>
-
+.copy {
+  text-align: center;
+}
+.copy a{
+  text-decoration: none;
+  color: black;
+}
+.copy a:hover{
+  color: #7710ce;
+}
 </style>
