@@ -134,6 +134,35 @@ blogApp.get('/getPublicBlog',async function (req, res) {
         })
     })
 })
+
+// 获取blogId的接口
+blogApp.get('/getBlogDetailById',async function (req,res){
+    let params = {
+        blogId: req.query.blogId
+    };
+    // 当有用户请求了某个id的数据，那么这个id对应的文章的views阅览数就自增一个1
+    // 人次， 请求一次就算一次， 1个人访问了10次 我就算10个点击量
+    // 人数 一个人无论点击多少次，就只算一次
+    await BlogTables.updateOne(params,{
+        $inc: {
+            views: 1
+        }
+    }).then(()=>{
+        console.log('博客阅览数自增1')
+    });
+    BlogTables.find(params,{
+        __v: false,
+        _id: false
+    }).then(rs=>{
+        res.send({
+            status:200,
+            message: '查询成功',
+            data: {
+                blogData: rs[0]
+            }
+        })
+    })
+})
 module.exports = {
     blogApp
 }
