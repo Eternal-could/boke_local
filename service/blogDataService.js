@@ -53,10 +53,13 @@ blogApp.post('/create', async function (req,res){
             $push: {
                 articles:  newBlogData.blogId
             }
+        }).then((rs)=>{
+            console.log('更新用户详情数据里面的博客信息');
         })
         // 向博客数据表里 创建一个新的文章
         BlogTables.create(newBlogData).then(rs1=>{
-            console.log('博客创建成功');
+            // console.log('博客创建成功');
+            // console.log(1);
             res.send({
                 status: 200,
                 message: '文章发布成功'

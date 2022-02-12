@@ -3,6 +3,7 @@ let crypto = require('crypto');
 let {v4} = require('uuid');// uuid 生成唯一令牌
 let UserTables = require('../db/userCountDB/userTable');
 let UserDetailTables = require('../db/userDetailDB/userDetailTable');
+let BlogTables = require('../db/BlogDataDB/blogTable');
 
 /**
  *  创建一个工具函数 加密
@@ -102,6 +103,9 @@ authenticationApp.get('/checkPermission',function (req,res){
     }).then(async rs=>{
         if (rs.length) {
             let userDetail = null;
+            let views = 0;  // 我的文章的阅览数
+            let likes = 0; // 我的文章的点赞数
+
             await UserDetailTables.find({
                 key: rs[0].key
             },{
@@ -110,7 +114,17 @@ authenticationApp.get('/checkPermission',function (req,res){
                 __v: false
             }).then(userDetails => {
                 userDetail = userDetails[0]
+            });
+
+            await BlogTables.find({
+                'author.userName': rs[0].userName
+            }).then(blogList=>{
+                blogList.forEach(blogData => {
+                    views += blogData.views;
+                    likes += blogData.likes;
+                })
             })
+
             res.send({
                 status: 200,
                 message: '用户鉴权成功',
@@ -120,7 +134,9 @@ authenticationApp.get('/checkPermission',function (req,res){
                         avatar: rs[0].avatar,
                         introduction: rs[0].introduction,
                         isAdmin: rs[0].isAdmin,
-                        userDetail
+                        userDetail,
+                        views,
+                        likes
                     }
                 }
             })
