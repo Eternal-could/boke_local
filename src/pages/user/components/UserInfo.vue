@@ -18,17 +18,17 @@
     </el-row>
     <el-row :gutter="10" style="text-align: center; margin-top: 20px">
       <el-col :span="8">
-        <el-badge class="mark" :value="12">
+        <el-badge class="mark" :value="userData.userDetail.articles.length">
           <el-button type="primary" size="mini">我的文章</el-button>
         </el-badge>
       </el-col>
       <el-col :span="8">
-        <el-badge class="mark" :value="12">
+        <el-badge class="mark" :value="userData.views">
           <el-button type="primary" size="mini">浏览数</el-button>
         </el-badge>
       </el-col>
       <el-col :span="8">
-        <el-badge class="mark" :value="12">
+        <el-badge class="mark" :value="userData.likes">
           <el-button type="primary" size="mini">点赞量</el-button>
         </el-badge>
       </el-col>

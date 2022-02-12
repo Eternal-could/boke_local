@@ -46,6 +46,7 @@
           <el-tab-pane label="广场" name="article">
             <Community></Community>
           </el-tab-pane>
+          <el-tab-pane label="我的文章" name="myself"></el-tab-pane>
           <el-tab-pane label="喜欢" name="like"></el-tab-pane>
           <el-tab-pane label="评论" name="comment"></el-tab-pane>
           <el-tab-pane label="关注" name="attention"></el-tab-pane>
@@ -53,6 +54,9 @@
         </el-tabs>
       </el-main>
     </el-container>
+    <el-footer>
+
+    </el-footer>
   </el-container>
 </template>
 

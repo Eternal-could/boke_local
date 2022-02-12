@@ -28,13 +28,13 @@
         <el-col :span="2">
           <el-avatar :src="articleData.author.avatar" size="small"></el-avatar>
         </el-col>
-        <el-col :span="4">
-          <p>{{articleData.author.lastModified | transformTime}}</p>
-        </el-col>
         <el-col :span="6">
           <p>{{articleData.author.userName}}</p>
         </el-col>
-        <el-col :span="12" style="display: flex; justify-content: space-around">
+        <el-col :span="4">
+        <p>{{articleData.lastModified | transformTime}}</p>
+      </el-col>
+        <el-col :span="7" :offset="5" style="display: flex; justify-content: space-evenly">
           <el-badge :value="articleData.likes" class="item">
             <el-button size="small">喜欢</el-button>
           </el-badge>
