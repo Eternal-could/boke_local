@@ -4,7 +4,8 @@ const apiAddr = {
     getImgApiAddr: '/api/v1/img',
     authenticationApiAddr: '/api/v1/authentication',
     blogApiAddr: '/api/v1/blog',
-    userDetailApiAddr: '/api/v1/userDetail'
+    userDetailApiAddr: '/api/v1/userDetail',
+    tipOffApiAddr: '/api/v1/tipOff'
 }
 
 module.exports = apiAddr;

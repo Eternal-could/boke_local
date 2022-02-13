@@ -36,6 +36,7 @@ let { getImgFileApp } = require('./service/img.file.get.service')
 let { authenticationApp } = require('./service/identifyAuthenticationService')
 let { blogApp } = require('./service/blogDataService')
 let { userDetailApp } = require('./service/UserDetailService')
+let { tipOffApp } = require('./service/TipOffService')
 
 // 启用各种服务
 app.use(apiAddr.uploadImgApiAddr, uploadImgFileApp);
@@ -43,6 +44,7 @@ app.use(apiAddr.getImgApiAddr, getImgFileApp);
 app.use(apiAddr.authenticationApiAddr,authenticationApp);
 app.use(apiAddr.blogApiAddr,blogApp);
 app.use(apiAddr.userDetailApiAddr,userDetailApp);
+app.use(apiAddr.tipOffApiAddr,tipOffApp);
 
 //启动服务
 app.listen(8888);
