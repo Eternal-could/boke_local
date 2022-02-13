@@ -46,11 +46,21 @@
           <el-tab-pane label="广场" name="article">
             <Community></Community>
           </el-tab-pane>
-          <el-tab-pane label="我的文章" name="myself"></el-tab-pane>
-          <el-tab-pane label="喜欢" name="like"></el-tab-pane>
-          <el-tab-pane label="评论" name="comment"></el-tab-pane>
-          <el-tab-pane label="关注" name="attention"></el-tab-pane>
-          <el-tab-pane label="黑名单" name="blacklist"></el-tab-pane>
+          <el-tab-pane label="我的文章" name="myself">
+            <MyBlog></MyBlog>
+          </el-tab-pane>
+          <el-tab-pane label="喜欢" name="like">
+            <MyLikeBlog></MyLikeBlog>
+          </el-tab-pane>
+          <el-tab-pane label="评论" name="comment">
+            <MyComment></MyComment>
+          </el-tab-pane>
+          <el-tab-pane label="关注" name="attention">
+            <MyAttentions></MyAttentions>
+          </el-tab-pane>
+          <el-tab-pane label="黑名单" name="blacklist">
+            <MyBlacklist></MyBlacklist>
+          </el-tab-pane>
         </el-tabs>
       </el-main>
     </el-container>
@@ -61,11 +71,21 @@
 import AuthorService from "@/service/AuthorService";
 import UserInfo from "@/pages/user/components/UserInfo";
 import Community from "@/pages/user/components/Community";
+import MyBlog from "@/pages/user/components/MyBlog";
+import MyLikeBlog from "@/pages/user/components/MyLikeBlog";
+import MyComment from "@/pages/user/components/MyComment";
+import MyAttentions from "@/pages/user/components/MyAttentions";
+import MyBlacklist from "@/pages/user/components/MyBlacklist";
 export default {
   name: "Home",
   components: {
     UserInfo,
-    Community
+    Community,
+    MyBlog,
+    MyLikeBlog,
+    MyComment,
+    MyAttentions,
+    MyBlacklist
   },
   data() {
     return {
