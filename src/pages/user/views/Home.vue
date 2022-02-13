@@ -17,7 +17,7 @@
           >
             <el-button type="primary" slot="append" icon="el-icon-search"></el-button>
           </el-input>
-          <el-dropdown v-if="hasPermission">
+          <el-dropdown v-if="hasPermission" @command="handleSelectSetting">
             <el-avatar
                 :src="userData.avatar"
                 :title="userData.userName"
@@ -26,14 +26,14 @@
             </el-avatar>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item disabled>{{userData.userName}}</el-dropdown-item>
-              <el-dropdown-item>设置</el-dropdown-item>
-              <el-dropdown-item>登出</el-dropdown-item>
+              <el-dropdown-item command="setting">设置</el-dropdown-item>
+              <el-dropdown-item command="signOut">登出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <el-link type="primary" href="login.html" v-if="!hasPermission">登录</el-link>
-          <el-button type="text" icon="el-icon-s-home" v-if="hasPermission">小树洞</el-button>
+          <el-button type="text" icon="el-icon-s-home" v-if="hasPermission" @click="goChartHome">小树洞</el-button>
           <el-button type="text" icon="el-icon-edit" v-if="hasPermission" @click="goEditArticle">写文章</el-button>
-          <el-button type="text" icon="el-icon-s-data" v-if="isAdmin">站点管理系统</el-button>
+          <el-button type="text" icon="el-icon-s-data" v-if="isAdmin" @click="goAdmin">站点管理系统</el-button>
         </el-col>
       </el-row>
     </el-header>
@@ -64,6 +64,13 @@
         </el-tabs>
       </el-main>
     </el-container>
+    <el-dialog
+        title="更新用户信息"
+        :visible.sync="isShowSetting"
+        width="60%"
+    >
+      <UserSetting></UserSetting>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -76,6 +83,8 @@ import MyLikeBlog from "@/pages/user/components/MyLikeBlog";
 import MyComment from "@/pages/user/components/MyComment";
 import MyAttentions from "@/pages/user/components/MyAttentions";
 import MyBlacklist from "@/pages/user/components/MyBlacklist";
+import UserSetting from "@/pages/user/components/UserSetting";
+import defaultConfig from "@/config/config.default";
 export default {
   name: "Home",
   components: {
@@ -85,7 +94,8 @@ export default {
     MyLikeBlog,
     MyComment,
     MyAttentions,
-    MyBlacklist
+    MyBlacklist,
+    UserSetting
   },
   data() {
     return {
@@ -93,7 +103,8 @@ export default {
       hasPermission: false,
       isAdmin: false,
       userData : {},
-      activeName: ''
+      activeName: '',
+      isShowSetting: false
     }
   },
   created() {
@@ -113,11 +124,31 @@ export default {
     this.activeName = this.$route.params.module? this.$route.params.module:'article'
   },
   methods: {
+    goAdmin(){
+      window.location.replace(`${defaultConfig.hostname}/admin.html`)
+    },
+    goChartHome(){
+      this.$router.push('/chatHome')
+    },
     goEditArticle() {
       this.$router.push('/editArticle')
     },
     switchTab(tab) {
       this.$router.push(`/home/${tab.name}`)
+    },
+    handleSelectSetting(command){
+      switch (command){
+        case "setting":
+          this.isShowSetting = !this.isShowSetting;
+          break;
+        case "signOut":
+          this.signOut();
+          break;
+      }
+    },
+    signOut() {
+      sessionStorage.removeItem('Authorization');
+      window.location.replace(`${defaultConfig.hostname}/login.html`)
     }
   }
 }
