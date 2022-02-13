@@ -50,3 +50,17 @@ app.use(apiAddr.tipOffApiAddr,tipOffApp);
 app.listen(8888);
 
 console.log('回忆乡后端系统启动了');
+
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({port: 12581});
+let userList = []
+wss.on('connection', function connection(user){
+    userList.push(user);// 当新用户连接了, 我们就把用户存起来
+    user.on('message', function incoming(message){
+        for (let i = 0, len = userList.length;i<len;i++){
+            if (userList[i] !== user){
+                userList[i].send(message);
+            }
+        }
+    })
+})

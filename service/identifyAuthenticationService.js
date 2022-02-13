@@ -149,6 +149,266 @@ authenticationApp.get('/checkPermission',function (req,res){
     })
 })
 
+authenticationApp.post('/updateUserInfo', function (req, res) {
+    UserTables.updateOne({
+        token: req.headers.authorization
+    }, {
+        $set: {
+            avatar: req.body.avatar,
+            introduction: req.body.introduction
+        }
+    }).then(async rs => {
+        res.send({
+            status: 200,
+            message: '用户信息更新成功'
+        })
+    })
+})
+
+authenticationApp.get('/unapprovedUser', function (req,res){
+    UserTables.find({
+        token: req.headers.authorization
+    }).then(async (rs)=>{
+        if (rs.length && rs[0].isAdmin){
+            let {offset, limit} = req.query; // 获取参数
+            let totalNum = 0;
+            await UserTables.find({
+                approved: false
+            }).then(unapprovedUsers=>{
+                totalNum = unapprovedUsers.length; // 获取未授权用户的总数
+            })
+            UserTables.find({
+                approved: false
+            },{
+                _id: false,
+                __v: false
+            },{
+                skip: Number(offset),
+                limit: Number(limit)
+            }).then(unapprovedUsers=>{
+                res.send({
+                    status: 200,
+                    message: '查询成功',
+                    data: {
+                        totalNum,
+                        userList: unapprovedUsers
+                    }
+                })
+            })
+        }else{
+            res.send({
+                status: 401,
+                message: '没有操作权限'
+            })
+        }
+    })
+})
+
+authenticationApp.get('/unAllUser', function (req,res){
+    UserTables.find({
+        token: req.headers.authorization
+    }).then(async (rs)=>{
+        if (rs.length && rs[0].isAdmin){
+            let {offset, limit} = req.query; // 获取参数
+            let totalNum = 0;
+            await UserTables.find({
+            }).then(unapprovedUsers=>{
+                totalNum = unapprovedUsers.length; // 获取未授权用户的总数
+            })
+            UserTables.find({
+            },{
+                _id: false,
+                __v: false
+            },{
+                skip: Number(offset),
+                limit: Number(limit)
+            }).then(unapprovedUsers=>{
+                res.send({
+                    status: 200,
+                    message: '查询成功',
+                    data: {
+                        totalNum,
+                        userList: unapprovedUsers
+                    }
+                })
+            })
+        }else{
+            res.send({
+                status: 401,
+                message: '没有操作权限'
+            })
+        }
+    })
+})
+
+authenticationApp.post('/approvedUser', function (req,res){
+    UserTables.find({
+        token: req.headers.authorization
+    }).then(async (rs)=>{
+        if (rs.length && rs[0].isAdmin){
+            UserTables.updateOne({
+                key: req.body.key
+            },{
+                $set:{
+                    approved: true
+                }
+            }).then(()=>{
+                res.send({
+                    status: 200,
+                    message: '批准用户注册'
+                })
+            })
+        }else{
+            res.send({
+                status: 401,
+                message: '没有操作权限'
+            })
+        }
+    })
+})
+
+authenticationApp.post('/unApprovedUser', function (req,res){
+    UserTables.find({
+        token: req.headers.authorization
+    }).then(async (rs)=>{
+        if (rs.length && rs[0].isAdmin){
+            UserTables.updateOne({
+                key: req.body.key
+            },{
+                $set:{
+                    approved: false
+                }
+            }).then(()=>{
+                res.send({
+                    status: 200,
+                    message: '批准用户注册'
+                })
+            })
+        }else{
+            res.send({
+                status: 401,
+                message: '没有操作权限'
+            })
+        }
+    })
+})
+
+authenticationApp.post('/deleteUser', function (req,res){
+    UserTables.find({
+        token: req.headers.authorization
+    }).then(async (rs)=>{
+        if (rs.length && rs[0].isAdmin){
+            await UserTables.find({
+                key: req.body.key
+            }).then(userInfos => {
+                BlogTables.deleteMany({
+                    'author.userName': userInfos[0].userName
+                }).then(()=>{
+                    console.log('删除用户的博客数据')
+                })
+            })
+
+            await UserDetailTables.deleteOne({
+                key: req.body.key
+            }).then(()=>{
+                console.log('删除用户的详细数据')
+            })
+
+            await UserTables.deleteOne({
+                key: req.body.key
+            }).then(()=>{
+                console.log('删除用户的主数据')
+            })
+
+            res.send({
+                status: 200,
+                message: '删除用户成功'
+            })
+        }else{
+            res.send({
+                status: 401,
+                message: '没有操作权限'
+            })
+        }
+    })
+})
+
+authenticationApp.post('/setAdmin', function (req, res){
+    UserTables.find({
+        token: req.headers.authorization
+    }).then((rs)=>{
+        if (rs.length && rs[0].isAdmin){
+            UserTables.updateOne({
+                key: req.body.key
+            }, {
+                $set: {
+                    isAdmin: true
+                }
+            }).then(userInfos => {
+                res.send({
+                    status: 200,
+                    message: '更改用户权限成功'
+                })
+            })
+        }else{
+            res.send({
+                status: 401,
+                message: '没有操作权限'
+            })
+        }
+    })
+})
+
+authenticationApp.post('/cancelAdmin', function (req, res){
+    UserTables.find({
+        token: req.headers.authorization
+    }).then((rs)=>{
+        if (rs.length && rs[0].isAdmin){
+            UserTables.updateOne({
+                key: req.body.key
+            }, {
+                $set: {
+                    isAdmin: false
+                }
+            }).then(userInfos => {
+                res.send({
+                    status: 200,
+                    message: '更改用户权限成功'
+                })
+            })
+        }else{
+            res.send({
+                status: 401,
+                message: '没有操作权限'
+            })
+        }
+    })
+})
+
+authenticationApp.get('/userRegisterInfo', function (req, res){
+    UserTables.find({
+        token: req.headers.authorization
+    }).then((rs)=>{
+        if (rs.length && rs[0].isAdmin){
+            UserTables.find({},{
+                createTime: true
+            }).then((userInfo)=>{
+                res.send({
+                    status: 200,
+                    data: {
+                        userInfo
+                    }
+                })
+            })
+        }else{
+            res.send({
+                status: 401,
+                message: '没有操作权限'
+            })
+        }
+    })
+})
+
 module.exports = {
     authenticationApp
 }
