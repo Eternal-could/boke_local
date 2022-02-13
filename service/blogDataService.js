@@ -166,6 +166,110 @@ blogApp.get('/getBlogDetailById',async function (req,res){
         })
     })
 })
+
+blogApp.post('/comment/create', function (req, res) {
+    let reqData = req.body;
+    let commentData = {
+        ...reqData.comment,
+        lastModified: new Date(),
+        commentId: v4()
+    }
+    UserTables.find({
+        token: req.headers.authorization
+    }).then((rs) => {
+        let key = rs[0].key;
+        UserDetailTables.updateOne({
+            key: key,
+            comments: {
+                $elemMatch: {
+                    blogId: reqData.blogId
+                }
+            }
+        },{
+            $push:{
+                'comments.$.commentData':{
+                    ...commentData
+                }
+            }
+        }).then(async (rs)=>{
+            if (rs.n<1){
+                // 在用户详情表里面当前没有这个博客id的评论数据
+                let blogData = {} ;// 取出这个博客的一些基本信息
+                await BlogTables.find({
+                    blogId: reqData.blogId
+                },{
+                    title: true,
+                    author: true,
+                    cover: true,
+                    description: true,
+                    lastModified:true
+                }).then(rs => {
+                    blogData = rs[0]
+                });
+
+                UserDetailTables.updateOne({
+                    key
+                },{
+                    $push: {
+                        'comments': {
+                            blogId: reqData.blogId,
+                            blogData,
+                            commentData:[
+                                commentData
+                            ]
+                        }
+                    }
+                }).then(rs => {
+                    console.log('创建新博客id的评论数据');
+                });
+            }
+        })
+    })
+
+    if (reqData.fatherId){
+        // 往博客里面的某个评论的comment字段添加值
+        BlogTables.updateOne({
+            blogId: reqData.blogId,
+            comment: {
+                $elemMatch: {
+                    commentId: reqData.fatherId
+                }
+            }
+        }, {
+            $push: {
+                'comment.$.comment': commentData
+            }
+        }).then(rs =>{
+            console.log('新增一个二级评论');
+            res.send({
+                status:200,
+                message: '评论成功',
+                data: {
+                    commentData
+                }
+            })
+        })
+    }else {
+        // 往博客里面的某个评论添加值
+        BlogTables.updateOne({
+            blogId: reqData.blogId
+        }, {
+            $push: {
+                'comment': commentData
+            }
+        }).then(rs =>{
+            console.log('新增一个二级评论');
+            res.send({
+                status:200,
+                message: '评论成功',
+                data: {
+                    commentData
+                }
+            })
+        })
+    }
+})
+
 module.exports = {
     blogApp
 }
