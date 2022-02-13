@@ -64,6 +64,10 @@
         </div>
       </div>
       <el-divider><i class="el-icon-s-comment"></i></el-divider>
+      <GlobalComment
+          :comment="blogData.comment"
+          :blog-id="blogId"
+      ></GlobalComment>
     </el-card>
     <el-dialog
       title="举报文章"
@@ -83,8 +87,12 @@
 import BlogService from "@/service/BlogService";
 import UserDetailService from "@/service/UserDetailService";
 import TipOffService from "@/service/TipOffService";
+import GlobalComment from "@/components/Global-comment";
 export default {
   name: "Article-Detail",
+  components:{
+    GlobalComment
+  },
   data(){
     return {
       blogId: '',

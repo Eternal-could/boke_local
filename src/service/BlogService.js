@@ -17,6 +17,10 @@ class BlogService {
             params: args
         });
     }
+
+    async createBlogComment(data) {
+        return axios.post(`${defaultConfig.baseApiUrl}/blog/comment/create`,data);
+    }
 }
 
 export default new BlogService()
