@@ -270,6 +270,105 @@ blogApp.post('/comment/create', function (req, res) {
     }
 })
 
+blogApp.get('/getMyBlog', async function (req, res) {
+    let params = {};
+    let {
+        offset,
+        limit,
+        searchKey
+    } = req.query;
+    // 当用户传过来一个搜索字段的时候
+    if (searchKey) {
+        params.title = searchKey;
+    }
+    // 设置博客作者信息
+    UserTables.find({
+        token: req.headers.authorization
+    }).then(async  (rs) => {
+        let totalNum = 0; // 博客总数
+        await BlogTables.find({
+            'author.userName':rs[0].userName,
+        }).then(blogList => {
+            totalNum = blogList.length; // 获取博客总数
+        })
+
+        BlogTables.find({
+            'author.userName':rs[0].userName,
+            ...params
+        }, {
+            content: false,
+            _id: false,
+            __v: false
+        }, {
+            skip: Number(offset),
+            limit: Number(limit),
+            sort: {
+                lastModified: -1
+            }
+        }).then(blogList => {
+            res.send({
+                status: 200,
+                message: '查询成功',
+                data: {
+                    blogList,
+                    totalNum
+                }
+            })
+        })
+    })
+})
+
+blogApp.get('/getMyLikeBlog', async function (req, res) {
+    let params = {};
+    let {
+        offset,
+        limit,
+        searchKey
+    } = req.query;
+    // 当用户传过来一个搜索字段的时候
+    if (searchKey) {
+        params.title = searchKey;
+    }
+    // 设置博客作者信息
+    UserTables.find({
+        token: req.headers.authorization
+    }).then(async  (rs) => {
+        let totalNum = 0; // 博客总数
+        let likes = []; //用户喜欢的博客id们
+        await UserDetailTables.find({
+            key: rs[0].key
+        }).then(userDetails=>{
+            totalNum = userDetails[0].likes.length;
+            likes = userDetails[0].likes;
+        })
+
+        BlogTables.find({
+            blogId:{
+                $in: likes
+            },
+            ...params
+        }, {
+            content: false,
+            _id: false,
+            __v: false
+        }, {
+            skip: Number(offset),
+            limit: Number(limit),
+            sort: {
+                lastModified: -1
+            }
+        }).then(blogList => {
+            res.send({
+                status: 200,
+                message: '查询成功',
+                data: {
+                    blogList,
+                    totalNum
+                }
+            })
+        })
+    })
+})
 module.exports = {
     blogApp
 }

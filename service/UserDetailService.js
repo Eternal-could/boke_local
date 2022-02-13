@@ -162,7 +162,103 @@ userDetailApp.delete('/blacklist/:userName',function (req,res) {
         })
     })
 })
+userDetailApp.get('/comment', function (req, res) {
+    let {offset, limit} = req.query; // 获取查询参数
+    UserTables.find({
+        token: req.headers.authorization
+    }).then((rs) => {
+        UserDetailTables.find({
+            key: rs[0].key
+        }).then((comments) => {
+            console.log(offset, limit)
+            let commentList = comments[0].comments.slice(offset, offset + limit);
+            res.send({
+                status: 200,
+                message: '获取个人评论成功',
+                data: {
+                    commentList,
+                    totalNum: comments[0].comments.length
+                }
+            })
+        }).catch(err => {
+            res.send({
+                status: 500,
+                message: '获取个人评论失败'
+            })
+        })
+    })
+})
+userDetailApp.get('/attention', function (req, res) {
+    let {offset, limit} = req.query; // 获取查询参数
+    UserTables.find({
+        token: req.headers.authorization
+    }).then((rs) => {
+        UserDetailTables.find({
+            key: rs[0].key
+        }).then((attentions) => {
+            let attentionList = attentions[0].attentions.slice(offset, offset + limit);
+            UserTables.find({
+                userName: {
+                    $in: attentionList
+                }
+            }, {
+                userName: true,
+                avatar: true,
+                introduction: true
+            }).then(rs => {
+                res.send({
+                    status: 200,
+                    message: '获取个人关注成功',
+                    data: {
+                        attentionList: rs,
+                        totalNum: attentions[0].attentions.length
+                    }
+                })
+            })
+        }).catch(err => {
+            res.send({
+                status: 500,
+                message: '获取个人关注失败'
+            })
+        })
+    })
+})
 
+userDetailApp.get('/blacklist', function (req, res) {
+    let {offset, limit} = req.query; // 获取查询参数
+    UserTables.find({
+        token: req.headers.authorization
+    }).then((rs) => {
+        UserDetailTables.find({
+            key: rs[0].key
+        }).then((blacklists) => {
+            let blacklist = blacklists[0].blacklist.slice(offset, offset + limit);
+            UserTables.find({
+                userName: {
+                    $in: blacklist
+                }
+            }, {
+                userName: true,
+                avatar: true,
+                introduction: true
+            }).then(rs => {
+                res.send({
+                    status: 200,
+                    message: '获取个人黑名单成功',
+                    data: {
+                        blacklist: rs,
+                        totalNum: blacklists[0].blacklist.length
+                    }
+                })
+            })
+        }).catch(err => {
+            res.send({
+                status: 500,
+                message: '获取个人黑名单失败'
+            })
+        })
+    })
+})
 module.exports = {
     userDetailApp
 }
