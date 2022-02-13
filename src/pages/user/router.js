@@ -32,6 +32,11 @@ let projectRouterConfig = [
         path: '/blogList/:searchKey',
         name: 'blogList',
         component: () => import('./views/BlogList')
+    },
+    {
+        path: '*',
+        name: 'Page404',
+        component: () => import('../../components/Page404')
     }
 ]
 export default new VueRouter({
