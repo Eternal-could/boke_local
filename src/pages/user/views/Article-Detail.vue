@@ -39,7 +39,10 @@
             >
               {{userData.userDetail.blacklist.includes(blogData.author.userName) ?'已拉黑':'拉黑'}}
             </el-button>
-            <el-button type="danger" icon="el-icon-thumb">举报</el-button>
+            <el-button type="danger"
+                       icon="el-icon-thumb"
+                       @click="switchTipOff"
+            >举报</el-button>
           </el-col>
         </el-row>
       </div>
@@ -60,13 +63,26 @@
           </el-row>
         </div>
       </div>
+      <el-divider><i class="el-icon-s-comment"></i></el-divider>
     </el-card>
+    <el-dialog
+      title="举报文章"
+      :visible.sync="isShowTipOff"
+      width="30%"
+      :before-close="handleClose">
+      <el-input v-model="tipOffReason" placeholder="请输入举报原因" type="textarea"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="isShowTipOff = false">取 消</el-button>
+        <el-button type="primary" @click="switchTipOff">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import BlogService from "@/service/BlogService";
 import UserDetailService from "@/service/UserDetailService";
+import TipOffService from "@/service/TipOffService";
 export default {
   name: "Article-Detail",
   data(){
@@ -86,12 +102,37 @@ export default {
         lastModified:'',
         tags:[]
       },
-      userData: JSON.parse(sessionStorage.getItem('userData'))
+      userData: JSON.parse(sessionStorage.getItem('userData')),
+      tipOffReason: '',
+      isShowTipOff: false
     }
   },
   methods: {
     goBack() {
       this.$router.go(-1);
+    },
+    switchTipOff() {
+      this.isShowTipOff = !this.isShowTipOff;
+      if (!this.isShowTipOff) {
+        const data = {
+          blogId: this.blogId,
+          description: this.blogData.description,
+          cover: this.blogData.cover,
+          title: this.blogData.title,
+          reason: this.tipOffReason
+        };
+        TipOffService.tipBlog(data).then(()=>{
+          this.$message.success('举报成功');
+          this.tipOffReason = '';
+        })
+      }
+    },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+          .then(() => {
+            done();
+          })
+          .catch(() => {});
     },
     switchAttentions() {
       if (this.userData.userDetail.attentions.includes(this.blogData.author.userName)) {
