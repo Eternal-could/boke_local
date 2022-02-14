@@ -177,7 +177,7 @@ export default {
               if (rs.data.status === 200) {
                 this.$message.success('登录成功')
                 sessionStorage.setItem('Authorization',rs.headers.authorization)
-                window.location.replace('http://localhost:8080/index.html');
+                window.location.replace(`${defaultConfig.hostname}/index.html`);
               } else {
                 this.$message.error('登录失败')
               }
@@ -189,7 +189,7 @@ export default {
               if (rs.data.status === 200) {
                 this.$message.success('注册成功')
                 sessionStorage.setItem('Authorization',rs.headers.authorization)
-                window.location.replace('http://localhost:8080/index.html');
+                window.location.replace(`${defaultConfig.hostname}/index.html`);
               } else {
                 this.$message.error('注册失败')
               }
