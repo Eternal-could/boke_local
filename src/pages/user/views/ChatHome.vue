@@ -66,7 +66,7 @@
 
 <script>
 
-// import defaultConfig from "@/config/config.default";
+import defaultConfig from "@/config/config.default";
 
 async function cutImageBase64(files, width, quality) {
   return new Promise((resolve) => {
@@ -122,8 +122,8 @@ export default {
     }
   },
   mounted() {
-    // this.socket = new WebSocket(`${defaultConfig.wssApiUrl}`);
-    this.socket = new WebSocket('ws://127.0.0.1:12581');
+    this.socket = new WebSocket(`${defaultConfig.wssApiUrl}`);
+    // this.socket = new WebSocket('ws://127.0.0.1:12581');
     let vm = this;
     this.socket.addEventListener('open', function () {
       vm.$message.success('加入聊天室');

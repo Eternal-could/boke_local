@@ -106,7 +106,8 @@ export default {
       activeName: '',
       isShowSetting: false,
       isShow: false,
-      disabled:true
+      disabled:true,
+      activeSearch: false
     }
   },
   created() {
