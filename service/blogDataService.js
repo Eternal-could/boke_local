@@ -83,7 +83,7 @@ blogApp.get('/getPublicBlog',async function (req, res) {
     } = req.query;
     // 当用户传过来搜索字段时
     if (searchKey) {
-        params.title = searchKey;
+        params.title = new RegExp(`${searchKey}`);
     }
     // 获取用户黑名单
     let blackList = [];
@@ -286,6 +286,7 @@ blogApp.get('/getMyBlog', async function (req, res) {
         token: req.headers.authorization
     }).then(async  (rs) => {
         let totalNum = 0; // 博客总数
+        console.log(rs[0].userName)
         await BlogTables.find({
             'author.userName':rs[0].userName,
         }).then(blogList => {

@@ -170,7 +170,7 @@ userDetailApp.get('/comment', function (req, res) {
         UserDetailTables.find({
             key: rs[0].key
         }).then((comments) => {
-            console.log(offset, limit)
+            // console.log(offset, limit)
             let commentList = comments[0].comments.slice(offset, offset + limit);
             res.send({
                 status: 200,
@@ -223,7 +223,6 @@ userDetailApp.get('/attention', function (req, res) {
         })
     })
 })
-
 userDetailApp.get('/blacklist', function (req, res) {
     let {offset, limit} = req.query; // 获取查询参数
     UserTables.find({
