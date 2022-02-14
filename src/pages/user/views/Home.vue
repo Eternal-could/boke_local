@@ -15,7 +15,7 @@
               placeholder="请输入博客的标题"
               style="width: 60%"
           >
-            <el-button type="primary" slot="append" icon="el-icon-search" @click="goBlogListPage"></el-button>
+            <el-button type="primary" :disabled="disabled" slot="append" icon="el-icon-search" @click="goBlogListPage"></el-button>
           </el-input>
           <el-dropdown v-if="hasPermission" @command="handleSelectSetting">
             <el-avatar
@@ -95,7 +95,7 @@ export default {
     MyComment,
     MyAttentions,
     MyBlacklist,
-    UserSetting
+    UserSetting,
   },
   data() {
     return {
@@ -105,7 +105,8 @@ export default {
       userData : {},
       activeName: '',
       isShowSetting: false,
-      isShow: false
+      isShow: false,
+      disabled:true
     }
   },
   created() {
@@ -118,6 +119,7 @@ export default {
         sessionStorage.removeItem('userData');
         sessionStorage.setItem('userData', JSON.stringify(this.userData));
         this.isShow = true;
+        this.disabled = false;
       } else {
         // no
         // window.location.replace('http://localhost:8080/login.html');
