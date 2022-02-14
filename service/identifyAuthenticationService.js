@@ -77,11 +77,18 @@ authenticationApp.post('/loginUser', function (req, res) {
         if (rs.length) {
             // 如果用户提交的密码 经过 存储过的key和算法加密后，与我们存储的最后密码是一致的 说名用户身份ok
             if (rs[0].password === enCryptData(req.body.password, rs[0].key, 'sha256')) {
-                res.setHeader('Authorization',rs[0].token);
-                res.send({
-                    status: 200,
-                    message: '登录'
-                })
+                if (rs[0].approved) {
+                    res.setHeader('Authorization',rs[0].token);
+                    res.send({
+                        status: 200,
+                        message: '登录'
+                    })
+                }else {
+                    res.send({
+                        status: 500,
+                        message: '该用户账号正在审核中'
+                    })
+                }
             } else {
                 res.send({
                     status: 500,
@@ -97,18 +104,17 @@ authenticationApp.post('/loginUser', function (req, res) {
     })
 })
 
-authenticationApp.get('/checkPermission',function (req,res){
+authenticationApp.get('/checkPermission', function (req, res) {
     UserTables.find({
         token: req.headers.authorization
-    }).then(async rs=>{
-        if (rs.length) {
+    }).then(async rs => {
+        if (rs.length && rs[0].approved) {
             let userDetail = null;
-            let views = 0;  // 我的文章的阅览数
-            let likes = 0; // 我的文章的点赞数
-
+            let views = 0;// 我的文章的阅览数
+            let likes = 0;// 我的文章的点赞数
             await UserDetailTables.find({
                 key: rs[0].key
-            },{
+            }, {
                 key: false,
                 _id: false,
                 __v: false
@@ -118,8 +124,9 @@ authenticationApp.get('/checkPermission',function (req,res){
 
             await BlogTables.find({
                 'author.userName': rs[0].userName
-            }).then(blogList=>{
+            }).then(blogList => {
                 blogList.forEach(blogData => {
+                    // console.log(blogData)
                     views += blogData.views;
                     likes += blogData.likes;
                 })
@@ -164,7 +171,7 @@ authenticationApp.post('/updateUserInfo', function (req, res) {
         })
     })
 })
-
+// 未授权用户
 authenticationApp.get('/unapprovedUser', function (req,res){
     UserTables.find({
         token: req.headers.authorization
