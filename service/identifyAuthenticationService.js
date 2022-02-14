@@ -48,7 +48,7 @@ authenticationApp.post('/registerUser',function (req,res){
                 avatar,
                 isAdmin: false,
                 introduction: '',
-                approved: true,
+                approved: false,
                 createTime: new Date()
             }).then(()=>{
                 res.setHeader('Authorization',token);
