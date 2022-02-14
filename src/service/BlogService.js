@@ -34,6 +34,29 @@ class BlogService {
         })
     }
 
+    async getUnapprovedBlog(args) {
+        return axios.get(`${defaultConfig.baseApiUrl}/blog/getUnapprovedBlog`,{
+            params: args
+        })
+    }
+
+    async getAllBlog(args) {
+        return axios.get(`${defaultConfig.baseApiUrl}/blog/getAllBlog`,{
+            params: args
+        })
+    }
+
+    async approvedBlog(data) {
+        return axios.post(`${defaultConfig.baseApiUrl}/blog/approvedBlog`, data)
+    }
+
+    async deleteBlog(data) {
+        return axios.post(`${defaultConfig.baseApiUrl}/blog/deleteBlog`, data)
+    }
+
+    async getBlogInfo() {
+        return axios.get(`${defaultConfig.baseApiUrl}/blog/getBlogInfo`,)
+    }
 }
 
 export default new BlogService()

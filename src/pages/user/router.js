@@ -26,7 +26,7 @@ let projectRouterConfig = [
     {
         path: '/article/:id',
         name: 'articleDetail',
-        component: () => import('./views/Article-Detail')
+        component: () => import('../../components/Article-Detail')
     },
     {
         path: '/blogList/:searchKey',

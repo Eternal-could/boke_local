@@ -179,7 +179,7 @@ export default {
                 sessionStorage.setItem('Authorization',rs.headers.authorization)
                 window.location.replace(`${defaultConfig.hostname}/index.html`);
               } else {
-                this.$message.error('登录失败')
+                this.$message.error('登录失败 ' + rs.data.message);
               }
             })
           } else {
@@ -187,11 +187,12 @@ export default {
             AuthorService.registerUser(this.registerForm).then(rs=>{
               // console.log('注册成功',rs);
               if (rs.data.status === 200) {
-                this.$message.success('注册成功')
+                // this.$message.success('注册成功')
                 sessionStorage.setItem('Authorization',rs.headers.authorization)
-                window.location.replace(`${defaultConfig.hostname}/index.html`);
+                this.$message.success('注册成功 ' + rs.data.message)
+                // window.location.replace(`${defaultConfig.hostname}/index.html`);
               } else {
-                this.$message.error('注册失败')
+                this.$message.error('注册失败 ' + rs.data.message)
               }
             })
           }

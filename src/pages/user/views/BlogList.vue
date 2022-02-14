@@ -67,6 +67,7 @@
     </div>
     <div style="display: flex;justify-content: center;">
       <el-pagination
+          :hide-on-single-page="true"
           layout="prev, pager, next"
           :page-size="searchParams.limit"
           :total="totalNum"
