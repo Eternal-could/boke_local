@@ -15,7 +15,7 @@
               placeholder="请输入博客的标题"
               style="width: 60%"
           >
-            <el-button type="primary" slot="append" icon="el-icon-search"></el-button>
+            <el-button type="primary" slot="append" icon="el-icon-search" @click="goBlogListPage"></el-button>
           </el-input>
           <el-dropdown v-if="hasPermission" @command="handleSelectSetting">
             <el-avatar
@@ -47,19 +47,19 @@
             <Community></Community>
           </el-tab-pane>
           <el-tab-pane label="我的文章" name="myself">
-            <MyBlog></MyBlog>
+<!--            <MyBlog></MyBlog>-->
           </el-tab-pane>
           <el-tab-pane label="喜欢" name="like">
-            <MyLikeBlog></MyLikeBlog>
+<!--            <MyLikeBlog></MyLikeBlog>-->
           </el-tab-pane>
           <el-tab-pane label="评论" name="comment">
-            <MyComment></MyComment>
+<!--            <MyComment></MyComment>-->
           </el-tab-pane>
           <el-tab-pane label="关注" name="attention">
-            <MyAttentions></MyAttentions>
+<!--            <MyAttentions></MyAttentions>-->
           </el-tab-pane>
           <el-tab-pane label="黑名单" name="blacklist">
-            <MyBlacklist></MyBlacklist>
+<!--            <MyBlacklist></MyBlacklist>-->
           </el-tab-pane>
         </el-tabs>
       </el-main>
@@ -78,11 +78,11 @@
 import AuthorService from "@/service/AuthorService";
 import UserInfo from "@/pages/user/components/UserInfo";
 import Community from "@/pages/user/components/Community";
-import MyBlog from "@/pages/user/components/MyBlog";
-import MyLikeBlog from "@/pages/user/components/MyLikeBlog";
-import MyComment from "@/pages/user/components/MyComment";
-import MyAttentions from "@/pages/user/components/MyAttentions";
-import MyBlacklist from "@/pages/user/components/MyBlacklist";
+// import MyBlog from "@/pages/user/components/MyBlog";
+// import MyLikeBlog from "@/pages/user/components/MyLikeBlog";
+// import MyComment from "@/pages/user/components/MyComment";
+// import MyAttentions from "@/pages/user/components/MyAttentions";
+// import MyBlacklist from "@/pages/user/components/MyBlacklist";
 import UserSetting from "@/pages/user/components/UserSetting";
 import defaultConfig from "@/config/config.default";
 export default {
@@ -90,11 +90,11 @@ export default {
   components: {
     UserInfo,
     Community,
-    MyBlog,
-    MyLikeBlog,
-    MyComment,
-    MyAttentions,
-    MyBlacklist,
+    // MyBlog,
+    // MyLikeBlog,
+    // MyComment,
+    // MyAttentions,
+    // MyBlacklist,
     UserSetting
   },
   data() {
@@ -119,6 +119,7 @@ export default {
       } else {
         // no
         // window.location.replace('http://localhost:8080/login.html');
+        // window.location.replace(`${defaultConfig.hostname}/login.html`);
       }
     })
     this.activeName = this.$route.params.module? this.$route.params.module:'article'
@@ -126,6 +127,11 @@ export default {
   methods: {
     goAdmin(){
       window.location.replace(`${defaultConfig.hostname}/admin.html`)
+    },
+    goBlogListPage(){
+      if (this.searchStr){
+        this.$router.push(`/blogList/${this.searchStr}`)
+      }
     },
     goChartHome(){
       this.$router.push('/chatHome')

@@ -18,7 +18,7 @@
           <el-col :span="2">
             <el-avatar :src="item.userData.avatar"></el-avatar>
           </el-col>
-          <el-col :span="22" style="box-shadow:0px 0px 2px 2px rgba(0,0,0,0.1)">
+          <el-col :span="22" style="box-shadow:0 0 2px 2px rgba(0,0,0,0.1)">
             <div @click="goBlogDetail(commentItem.blogId)" style="padding: 10px;">
               {{ item.content }}
             </div>
