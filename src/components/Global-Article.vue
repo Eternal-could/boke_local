@@ -9,6 +9,7 @@
         <el-col :span="24">
           <el-image
             :src="articleData.cover"
+            style="width: 60%; margin-left: 36px"
           >
             <div slot="placeholder" class="image-slot">
               加载中<span class="dot">...</span>
@@ -26,7 +27,7 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="2">
-          <el-avatar :src="articleData.author.avatar" size="small"></el-avatar>
+          <el-avatar :src="articleData.author.avatar" size="small" style="margin-top: 14px"></el-avatar>
         </el-col>
         <el-col :span="6">
           <p>{{articleData.author.userName}}</p>
@@ -51,6 +52,8 @@
 </template>
 
 <script>
+import AuthorService from "@/service/AuthorService";
+import defaultConfig from "@/config/config.default";
 export default {
   name: "Global-Article",
   props: {
@@ -101,7 +104,13 @@ export default {
   },
   methods: {
     GoArticleDetail() {
-      this.$router.push(`/article/${this.articleData.blogId}`);
+      AuthorService.checkPermission().then(rs=>{
+        if (rs.data.status === 200) {
+          this.$router.push(`/article/${this.articleData.blogId}`);
+        } else {
+          window.location.replace(`${defaultConfig.hostname}/login.html`);
+        }
+      })
     }
   }
 }

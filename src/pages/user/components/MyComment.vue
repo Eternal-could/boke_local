@@ -27,6 +27,7 @@
       </div>
     </el-card>
     <el-pagination
+        :hide-on-single-page="true"
         layout="prev, pager, next"
         :page-size="params.limit"
         :total="totalNum"

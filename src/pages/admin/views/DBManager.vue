@@ -124,6 +124,7 @@
         </el-table>
         <div style="display: flex;justify-content: center;margin-top: 20px;">
           <el-pagination
+              :hide-on-single-page="true"
               layout="prev, pager, next"
               :total="userTotalNum"
               :page-size="searchUserParams.limit"
