@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="box-card" v-for="(attentionItem, index) in attentionList" :key="index" style="margin-bottom: 20px;">
+    <el-card class="box-card" v-for="(attentionItem, index) in attentionList" :key="index" style="width: 44%; margin-left: 210px; ">
         <el-row :gutter="10">
           <el-col :span="6">
             <el-avatar :src="attentionItem.avatar"></el-avatar>
@@ -17,6 +17,7 @@
                 type="primary"
                 :icon="userData.userDetail.attentions.includes(attentionItem.userName)?'el-icon-check':'el-icon-plus'"
                 @click="switchAttentions(attentionItem.userName)"
+                style="margin-left: 360px"
             >关注
             </el-button>
           </el-col>
@@ -28,6 +29,7 @@
         :page-size="params.limit"
         :total="totalNum"
         @current-change="changePage"
+        style="margin-left: 210px"
     >
     </el-pagination>
   </div>

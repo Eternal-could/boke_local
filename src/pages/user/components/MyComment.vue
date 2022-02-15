@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="box-card"  v-for="(commentItem, index) in commentList" :key="index" style="margin-bottom: 20px;">
+    <el-card class="box-card"  v-for="(commentItem, index) in commentList" :key="index" style="margin-bottom: 20px;width: 64%; margin-left: 210px">
       <div slot="header" class="clearfix" @click="goBlogDetail(commentItem.blogId)">
         <el-row :gutter="10">
           <el-col :span="10">
@@ -31,6 +31,7 @@
         :page-size="params.limit"
         :total="totalNum"
         @current-change="changePage"
+        style="margin-left: 210px"
     >
     </el-pagination>
   </div>

@@ -11,6 +11,7 @@
         :page-size="params.limit"
         :total="totalNum"
         @current-change="changePage"
+        style="margin-left: 210px"
     ></el-pagination>
   </div>
 </template>

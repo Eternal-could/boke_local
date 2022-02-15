@@ -11,6 +11,7 @@
       :page-size="params.limit"
       :total="totalNum"
       @current-change="changePage"
+      style="margin-left: 210px"
     ></el-pagination>
     <div class="copy">
       <a href="https://beian.miit.gov.cn/#/Integrated/index" target="blank">黑ICP备19006802号</a>

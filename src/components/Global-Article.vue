@@ -1,6 +1,6 @@
 <template>
   <div @click="GoArticleDetail">
-    <el-card class="box-card">
+    <el-card class="box-card" style="width: 64%; margin-left: 210px">
       <div slot="header" class="clearfix">
         <span>{{articleData.title}}</span>
         <el-tag type="warning" v-if="!articleData.approved">未审核</el-tag>
@@ -34,7 +34,7 @@
         <el-col :span="4">
         <p>{{articleData.lastModified | transformTime}}</p>
       </el-col>
-        <el-col :span="7" :offset="5" style="display: flex; justify-content: space-evenly">
+        <el-col :span="7" :offset="5" style="display: flex; justify-content: space-between; ">
           <el-badge :value="articleData.likes" class="item">
             <el-button size="small">喜欢</el-button>
           </el-badge>

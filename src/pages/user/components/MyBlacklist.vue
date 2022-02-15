@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="box-card" v-for="(blacklistItem, index) in blacklist" :key="index" style="margin-bottom: 20px;">
+    <el-card class="box-card" v-for="(blacklistItem, index) in blacklist" :key="index" style="margin-bottom: 20px;width: 44%; margin-left: 210px;">
         <el-row :gutter="10">
           <el-col :span="6">
             <el-avatar :src="blacklistItem.avatar"></el-avatar>
@@ -17,6 +17,7 @@
                 type="danger"
                 icon="el-icon-s-custom"
                 @click="switchBlackList(blacklistItem.userName)"
+                style="margin-left: 360px"
             >
               {{ userData.userDetail.blacklist.includes(blacklistItem.userName) ? '已拉黑' : '拉黑' }}
             </el-button>
@@ -24,10 +25,12 @@
         </el-row>
     </el-card>
     <el-pagination
+        :hide-on-single-page="true"
         layout="prev, pager, next"
         :page-size="params.limit"
         :total="totalNum"
         @current-change="changePage"
+        style="margin-left: 210px"
     >
     </el-pagination>
   </div>
