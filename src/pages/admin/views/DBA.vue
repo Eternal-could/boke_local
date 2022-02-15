@@ -243,8 +243,7 @@ export default {
   },
   mounted() {
     this.userDataChartsSize.width = this.$refs.userDataWrapper.clientWidth;
-    this.userDataChartsSize.height =
-      this.$refs.userDataWrapper.clientWidth * 0.3;
+    this.userDataChartsSize.height = this.$refs.userDataWrapper.clientWidth * 0.3;
     AuthorService.getUserRegisterInfo().then((rs) => {
       this.userNum = rs.data.data.userInfo.length;
       let timedata = [];
@@ -288,7 +287,7 @@ export default {
         .getComponent("bmap")
         .getBMap(); // 获取百度地图实例
       bmap.setMapStyleV2({
-        styleId: "f0744950d4a467f7ff7039b8b504e55d",
+        styleId: "9df7d35208d7df5390535c149e1cbfa7",
       });
     });
   },
@@ -313,7 +312,7 @@ export default {
           .getComponent("bmap")
           .getBMap(); // 获取百度地图实例
         bmap.setMapStyleV2({
-          styleId: "f0744950d4a467f7ff7039b8b504e55d",
+          styleId: "9df7d35208d7df5390535c149e1cbfa7",
         });
       });
     },
