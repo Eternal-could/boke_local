@@ -125,6 +125,7 @@ export default {
         // no
         // window.location.replace('http://localhost:8080/login.html');
         window.location.replace(`${defaultConfig.hostname}/index.html#/home/article`);
+        // window.location.replace(`${defaultConfig.hostname}/login.html`);
       }
     })
     this.activeName = this.$route.params.module? this.$route.params.module:'article'

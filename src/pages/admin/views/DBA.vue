@@ -246,6 +246,7 @@ export default {
     this.userDataChartsSize.height = this.$refs.userDataWrapper.clientWidth * 0.3;
     AuthorService.getUserRegisterInfo().then((rs) => {
       this.userNum = rs.data.data.userInfo.length;
+      console.log(1);
       let timedata = [];
       for (let i = 0, len = rs.data.data.userInfo.length; i < len; i++) {
         timedata.push([new Date(rs.data.data.userInfo[i].createTime), 1]);
